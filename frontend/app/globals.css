@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #d4af37;
+  --gold-light: #f9d054;
+  --gold-dark: #b8960f;
+  --black: #0a0a0a;
+  --charcoal: #1a1a1a;
+  --cream: #f5f0e6;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--cream);
+}
+
+/* Art Deco decorative elements */
+.art-deco-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold) 20%,
+    var(--gold) 80%,
+    transparent 100%
+  );
+}
+
+.art-deco-corner {
+  position: relative;
+}
+
+.art-deco-corner::before,
+.art-deco-corner::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-color: var(--gold);
+  border-style: solid;
+}
+
+.art-deco-corner::before {
+  top: 0;
+  left: 0;
+  border-width: 2px 0 0 2px;
+}
+
+.art-deco-corner::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 2px 2px 0;
+}
+
+/* Gold star styling */
+.star-filled {
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.star-empty {
+  color: #444;
+}
+
+/* Elegant hover effects */
+.gold-glow:hover {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Input styling */
+.search-input {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 26, 26, 0.9) 0%,
+    rgba(26, 26, 26, 0.7) 100%
+  );
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  outline: none;
+}
+
+/* Award card styling */
+.award-card {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 26, 0.9) 0%,
+    rgba(45, 45, 45, 0.9) 100%
+  );
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.3s ease;
+}
+
+.award-card:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Spotlight effect for header */
+.spotlight {
+  background: radial-gradient(
+    ellipse at center top,
+    rgba(212, 175, 55, 0.1) 0%,
+    transparent 50%
+  );
+}
+
+/* Gold shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gold-dark) 0%,
+    var(--gold-light) 50%,
+    var(--gold-dark) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Celebrity photo frame */
+.photo-frame {
+  border: 3px solid var(--gold);
+  box-shadow:
+    0 0 0 1px var(--black),
+    0 0 0 4px rgba(212, 175, 55, 0.3),
+    0 10px 30px rgba(0, 0, 0, 0.5);
+}
