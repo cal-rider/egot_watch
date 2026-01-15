@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS awards (
     year INTEGER NOT NULL,
     work TEXT NOT NULL,
     category TEXT NOT NULL,
-    is_winner BOOLEAN NOT NULL DEFAULT false
+    is_winner BOOLEAN NOT NULL DEFAULT false,
+    ceremony_date DATE,
+    is_upcoming BOOLEAN NOT NULL DEFAULT false
 );
 
 -- Create index on celebrity_id for faster award lookups

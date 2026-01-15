@@ -27,29 +27,35 @@ A web application that tracks celebrity progress toward achieving EGOT status (E
 ### Quick Start
 
 ```bash
+# All commands should be run from the project root directory
+cd egot_watch
+
 # 1. Start PostgreSQL
 brew services start postgresql@16
 
 # 2. Create database
-/usr/local/opt/postgresql@16/bin/createdb egot_tracker
-/usr/local/opt/postgresql@16/bin/psql -d egot_tracker -f setup.sql
+# Note: Use /usr/local/opt/postgresql@16/bin/ for Intel Macs
+/opt/homebrew/opt/postgresql@16/bin/createdb egot_tracker
+/opt/homebrew/opt/postgresql@16/bin/psql -d egot_tracker -f setup.sql
+
+# If you get errors about missing columns (ceremony_date, is_upcoming), run migrations:
+# /opt/homebrew/opt/postgresql@16/bin/psql -d egot_tracker -f migration_add_ceremony_date.sql
 
 # 3. Configure environment
 echo "DATABASE_URL=postgresql://localhost:5432/egot_tracker?sslmode=disable" > .env
 echo "PORT=8080" >> .env
 
-# 4. Seed database (optional)
-go run ./cmd/seed
-go run ./cmd/fetch-photos
-
-# 5. Start backend
+# 4. Start backend
 go run ./cmd/api
 
-# 6. Start frontend (new terminal)
+# 5. Setup and start frontend (new terminal)
+# Install Node.js 18.20.4 if not already installed (asdf will auto-detect from .tool-versions)
+asdf install nodejs 18.20.4
+
 cd frontend && npm install && npm run dev
 ```
 
-Visit http://localhost:3000
+Visit http://localhost:3210
 
 ## API Endpoints
 
