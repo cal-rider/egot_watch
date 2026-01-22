@@ -63,15 +63,18 @@ func main() {
 	// Initialize repositories
 	celebrityRepo := repository.NewCelebrityRepository(pool)
 	awardRepo := repository.NewAwardRepository(pool)
+	oscarRepo := repository.NewOscarRepository(pool)
 
 	// Initialize Wikidata scraper
 	wikidataScraper := scraper.NewWikidataScraper()
 
 	// Initialize services
 	celebrityService := service.NewCelebrityService(celebrityRepo, awardRepo, wikidataScraper)
+	oscarService := service.NewOscarService(oscarRepo, celebrityRepo)
 
 	// Initialize handlers
 	celebrityHandler := handler.NewCelebrityHandler(celebrityService)
+	oscarHandler := handler.NewOscarHandler(oscarService)
 
 	// Setup routes
 	mux := http.NewServeMux()
@@ -99,6 +102,11 @@ func main() {
 
 	// No awards endpoint
 	mux.HandleFunc("GET /api/celebrity/no-awards", celebrityHandler.NoAwards)
+
+	// Oscar race endpoints
+	mux.HandleFunc("GET /api/oscar-race/years", oscarHandler.GetYears)
+	mux.HandleFunc("GET /api/oscar-race/{year}", oscarHandler.GetCeremony)
+	mux.HandleFunc("PUT /api/oscar-race/{year}/category/{categoryId}/winner/{nomineeId}", oscarHandler.SetWinner)
 
 	// Create server with CORS middleware
 	server := &http.Server{

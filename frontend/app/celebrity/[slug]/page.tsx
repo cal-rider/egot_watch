@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Celebrity, Award, searchCelebrity } from "@/lib/api";
+import { Celebrity, Award, searchCelebrity, getEGOTStatus } from "@/lib/api";
 import CelebrityHeader from "@/components/CelebrityHeader";
 import AwardCard from "@/components/AwardCard";
+import EGOTCelebration from "@/components/EGOTCelebration";
 
 const loadingMessages = [
   "Searching the archives...",
@@ -71,6 +72,9 @@ export default function CelebrityPage() {
   );
 
   const awardOrder = ["Oscar", "Emmy", "Grammy", "Tony"] as const;
+
+  // Check if EGOT winner
+  const isEGOT = celebrity ? getEGOTStatus(celebrity.awards).isEGOT : false;
 
   return (
     <main className="min-h-screen px-4 py-12">
@@ -146,6 +150,9 @@ export default function CelebrityPage() {
 
         {celebrity && (
           <>
+            {/* EGOT Winner Celebration */}
+            {isEGOT && <EGOTCelebration />}
+
             <CelebrityHeader celebrity={celebrity} />
 
             {/* Biography Summary */}

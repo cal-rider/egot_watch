@@ -157,3 +157,72 @@ export async function getNoAwards(limit?: number): Promise<CelebrityBasic[]> {
 
   return response.json();
 }
+
+// Oscar Race types and functions
+export interface OscarNominee {
+  id: string;
+  category_id: string;
+  celebrity_id?: string;
+  name: string;
+  photo_url: string | null;
+  work_title: string | null;
+  is_winner: boolean;
+  display_order: number;
+}
+
+export interface OscarCategory {
+  id: string;
+  ceremony_id: string;
+  name: string;
+  display_order: number;
+  winner_announced: boolean;
+  nominees: OscarNominee[];
+}
+
+export interface OscarCeremony {
+  id: string;
+  year: number;
+  ceremony_name: string | null;
+  ceremony_date: string | null;
+  is_complete: boolean;
+  created_at: string;
+  categories: OscarCategory[];
+}
+
+export async function getOscarCeremony(year: number): Promise<OscarCeremony> {
+  const response = await fetch(`${API_BASE}/api/oscar-race/${year}`);
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error("Ceremony not found");
+    }
+    throw new Error("Failed to fetch Oscar ceremony");
+  }
+
+  return response.json();
+}
+
+export async function getOscarYears(): Promise<number[]> {
+  const response = await fetch(`${API_BASE}/api/oscar-race/years`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch Oscar years");
+  }
+
+  return response.json();
+}
+
+export async function setOscarWinner(
+  year: number,
+  categoryId: string,
+  nomineeId: string
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE}/api/oscar-race/${year}/category/${categoryId}/winner/${nomineeId}`,
+    { method: "PUT" }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to set winner");
+  }
+}

@@ -36,6 +36,46 @@ CREATE INDEX IF NOT EXISTS idx_awards_celebrity_id ON awards (celebrity_id);
 -- Create index on type for filtering by award type
 CREATE INDEX IF NOT EXISTS idx_awards_type ON awards (type);
 
+-- =============================================
+-- OSCAR RACE TABLES
+-- =============================================
+
+-- Oscar ceremony tracking
+CREATE TABLE IF NOT EXISTS oscar_ceremonies (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    year INTEGER UNIQUE NOT NULL,
+    ceremony_name TEXT,
+    ceremony_date DATE,
+    is_complete BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Oscar categories for each year
+CREATE TABLE IF NOT EXISTS oscar_categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ceremony_id UUID REFERENCES oscar_ceremonies(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    display_order INTEGER DEFAULT 0,
+    winner_announced BOOLEAN DEFAULT false
+);
+
+-- Oscar nominees (can be person or work)
+CREATE TABLE IF NOT EXISTS oscar_nominees (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    category_id UUID REFERENCES oscar_categories(id) ON DELETE CASCADE,
+    celebrity_id UUID REFERENCES celebrities(id) ON DELETE SET NULL,
+    name TEXT NOT NULL,
+    photo_url TEXT,
+    work_title TEXT,
+    is_winner BOOLEAN DEFAULT false,
+    display_order INTEGER DEFAULT 0
+);
+
+-- Indexes for Oscar tables
+CREATE INDEX IF NOT EXISTS idx_oscar_categories_ceremony ON oscar_categories(ceremony_id);
+CREATE INDEX IF NOT EXISTS idx_oscar_nominees_category ON oscar_nominees(category_id);
+CREATE INDEX IF NOT EXISTS idx_oscar_nominees_celebrity ON oscar_nominees(celebrity_id);
+
 -- Insert sample data for testing
 INSERT INTO celebrities (name, slug, photo_url) VALUES
     ('Viola Davis', 'viola-davis', NULL),
