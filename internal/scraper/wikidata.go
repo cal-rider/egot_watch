@@ -245,6 +245,41 @@ ORDER BY DESC(?year)
 	return &personInfo, awards, nil
 }
 
+// WikipediaSummaryResponse represents the response from Wikipedia REST API
+type WikipediaSummaryResponse struct {
+	Extract string `json:"extract"`
+}
+
+// FetchWikipediaSummary fetches the summary/extract from Wikipedia for a given name
+func (w *WikidataScraper) FetchWikipediaSummary(ctx context.Context, name string) (string, error) {
+	// Wikipedia uses underscores for spaces in titles
+	title := strings.ReplaceAll(name, " ", "_")
+	apiURL := fmt.Sprintf("https://en.wikipedia.org/api/rest_v1/page/summary/%s", url.PathEscape(title))
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiURL, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create Wikipedia request: %w", err)
+	}
+	req.Header.Set("User-Agent", "EGOT-Tracker/1.0 (https://github.com/egot-tracker)")
+
+	resp, err := w.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to fetch Wikipedia summary: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("Wikipedia API returned status %d", resp.StatusCode)
+	}
+
+	var summaryResp WikipediaSummaryResponse
+	if err := json.NewDecoder(resp.Body).Decode(&summaryResp); err != nil {
+		return "", fmt.Errorf("failed to decode Wikipedia response: %w", err)
+	}
+
+	return summaryResp.Extract, nil
+}
+
 // FetchCelebrity searches for a celebrity and returns their data with awards
 func (w *WikidataScraper) FetchCelebrity(ctx context.Context, name string) (*models.Celebrity, []models.Award, error) {
 	// Step 1: Search for the person
@@ -264,7 +299,13 @@ func (w *WikidataScraper) FetchCelebrity(ctx context.Context, name string) (*mod
 		fullInfo.Name = personInfo.Name
 	}
 
-	// Step 3: Convert to our models
+	// Step 3: Fetch Wikipedia summary (required - skip if not found)
+	summary, err := w.FetchWikipediaSummary(ctx, fullInfo.Name)
+	if err != nil {
+		return nil, nil, fmt.Errorf("Wikipedia lookup failed for %s: %w", fullInfo.Name, err)
+	}
+
+	// Step 4: Convert to our models
 	celebrity := &models.Celebrity{
 		Name: fullInfo.Name,
 		Slug: slugify(fullInfo.Name),
@@ -272,6 +313,10 @@ func (w *WikidataScraper) FetchCelebrity(ctx context.Context, name string) (*mod
 	if fullInfo.PhotoURL != "" {
 		celebrity.PhotoURL.String = fullInfo.PhotoURL
 		celebrity.PhotoURL.Valid = true
+	}
+	if summary != "" {
+		celebrity.Summary.String = summary
+		celebrity.Summary.Valid = true
 	}
 
 	awards := make([]models.Award, 0, len(wikidataAwards))

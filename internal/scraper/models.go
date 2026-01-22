@@ -27,6 +27,7 @@ type WikidataPersonInfo struct {
 	WikidataID string
 	Name       string
 	PhotoURL   string
+	Summary    string
 }
 
 // SPARQLResponse represents the response from Wikidata SPARQL endpoint

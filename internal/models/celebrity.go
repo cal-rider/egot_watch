@@ -11,6 +11,7 @@ type Celebrity struct {
 	Name        string           `json:"name" db:"name"`
 	Slug        string           `json:"slug" db:"slug"`
 	PhotoURL    pgtype.Text      `json:"photo_url" db:"photo_url"`
+	Summary     pgtype.Text      `json:"summary" db:"summary"`
 	LastUpdated pgtype.Timestamp `json:"last_updated" db:"last_updated"`
 }
 
@@ -36,6 +37,13 @@ func (c *Celebrity) GetLastUpdated() *time.Time {
 func (c *Celebrity) GetPhotoURL() *string {
 	if c.PhotoURL.Valid {
 		return &c.PhotoURL.String
+	}
+	return nil
+}
+
+func (c *Celebrity) GetSummary() *string {
+	if c.Summary.Valid {
+		return &c.Summary.String
 	}
 	return nil
 }

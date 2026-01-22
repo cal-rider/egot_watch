@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(brew list:*)"
+      "Bash(brew list:*)",
+      "Bash(curl:*)",
+      "Bash(go build:*)"
     ]
   }
 }

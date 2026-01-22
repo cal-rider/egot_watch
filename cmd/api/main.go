@@ -94,6 +94,12 @@ func main() {
 	// Close to EGOT endpoint
 	mux.HandleFunc("GET /api/celebrity/close-to-egot", celebrityHandler.CloseToEGOT)
 
+	// EGOT winners endpoint
+	mux.HandleFunc("GET /api/celebrity/egot-winners", celebrityHandler.EGOTWinners)
+
+	// No awards endpoint
+	mux.HandleFunc("GET /api/celebrity/no-awards", celebrityHandler.NoAwards)
+
 	// Create server with CORS middleware
 	server := &http.Server{
 		Addr:         ":" + cfg.Port,

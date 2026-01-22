@@ -82,3 +82,47 @@ func (h *CelebrityHandler) CloseToEGOT(w http.ResponseWriter, r *http.Request) {
 
 	response.JSON(w, http.StatusOK, results)
 }
+
+// EGOTWinners handles GET /api/celebrity/egot-winners
+func (h *CelebrityHandler) EGOTWinners(w http.ResponseWriter, r *http.Request) {
+	limit := 50
+	if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
+		if parsed, err := strconv.Atoi(limitStr); err == nil && parsed > 0 {
+			limit = parsed
+		}
+	}
+
+	results, err := h.service.GetEGOTWinners(r.Context(), limit)
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, "internal server error")
+		return
+	}
+
+	if results == nil {
+		results = []models.CelebrityWithEGOTProgress{}
+	}
+
+	response.JSON(w, http.StatusOK, results)
+}
+
+// NoAwards handles GET /api/celebrity/no-awards
+func (h *CelebrityHandler) NoAwards(w http.ResponseWriter, r *http.Request) {
+	limit := 50
+	if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
+		if parsed, err := strconv.Atoi(limitStr); err == nil && parsed > 0 {
+			limit = parsed
+		}
+	}
+
+	results, err := h.service.GetNoAwards(r.Context(), limit)
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, "internal server error")
+		return
+	}
+
+	if results == nil {
+		results = []models.Celebrity{}
+	}
+
+	response.JSON(w, http.StatusOK, results)
+}

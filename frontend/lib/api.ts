@@ -17,6 +17,7 @@ export interface Celebrity {
   name: string;
   slug: string;
   photo_url: string | null;
+  summary: string | null;
   last_updated: string;
   awards: Award[];
 }
@@ -115,6 +116,43 @@ export async function getCloseToEGOT(limit?: number): Promise<CelebrityWithProgr
 
   if (!response.ok) {
     throw new Error("Failed to fetch close to EGOT celebrities");
+  }
+
+  return response.json();
+}
+
+export async function getEGOTWinners(limit?: number): Promise<CelebrityWithProgress[]> {
+  const url = limit
+    ? `${API_BASE}/api/celebrity/egot-winners?limit=${limit}`
+    : `${API_BASE}/api/celebrity/egot-winners`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch EGOT winners");
+  }
+
+  return response.json();
+}
+
+export interface CelebrityBasic {
+  id: string;
+  name: string;
+  slug: string;
+  photo_url: string | null;
+  summary: string | null;
+  last_updated: string;
+}
+
+export async function getNoAwards(limit?: number): Promise<CelebrityBasic[]> {
+  const url = limit
+    ? `${API_BASE}/api/celebrity/no-awards?limit=${limit}`
+    : `${API_BASE}/api/celebrity/no-awards`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch celebrities with no awards");
   }
 
   return response.json();

@@ -1,5 +1,7 @@
 import SearchBar from "@/components/SearchBar";
+import EGOTAllStarsSection from "@/components/EGOTAllStarsSection";
 import CloseToEGOTSection from "@/components/CloseToEGOTSection";
+import BigLosersSection from "@/components/BigLosersSection";
 
 export default function Home() {
   return (
@@ -32,8 +34,14 @@ export default function Home() {
       {/* Search */}
       <SearchBar />
 
+      {/* EGOT All Stars Section */}
+      <EGOTAllStarsSection />
+
       {/* Close to EGOT Featured Section */}
       <CloseToEGOTSection />
+
+      {/* Big Losers Section */}
+      <BigLosersSection />
 
       {/* Footer decoration */}
       <div className="mt-16 text-center">

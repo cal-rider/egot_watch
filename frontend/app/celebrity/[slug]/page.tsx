@@ -148,6 +148,15 @@ export default function CelebrityPage() {
           <>
             <CelebrityHeader celebrity={celebrity} />
 
+            {/* Biography Summary */}
+            {celebrity.summary && (
+              <div className="mt-8 p-6 bg-hollywood-black/30 border border-gold-500/20 rounded-lg">
+                <p className="text-hollywood-cream/90 leading-relaxed">
+                  {celebrity.summary}
+                </p>
+              </div>
+            )}
+
             {/* Awards Section */}
             <div className="mt-12">
               <div className="art-deco-line mb-8" />

@@ -102,3 +102,19 @@ func (s *CelebrityService) GetCloseToEGOT(ctx context.Context, limit int) ([]mod
 	}
 	return s.celebrityRepo.FindCloseToEGOT(ctx, limit)
 }
+
+// GetEGOTWinners returns celebrities with all 4 EGOT awards
+func (s *CelebrityService) GetEGOTWinners(ctx context.Context, limit int) ([]models.CelebrityWithEGOTProgress, error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	return s.celebrityRepo.FindEGOTWinners(ctx, limit)
+}
+
+// GetNoAwards returns celebrities with no awards
+func (s *CelebrityService) GetNoAwards(ctx context.Context, limit int) ([]models.Celebrity, error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	return s.celebrityRepo.FindNoAwards(ctx, limit)
+}

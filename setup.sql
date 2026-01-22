@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS celebrities (
     name TEXT NOT NULL UNIQUE,
     slug TEXT NOT NULL,
     photo_url TEXT,
+    summary TEXT,
     last_updated TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
